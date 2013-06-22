@@ -45,8 +45,8 @@ def generatecode(dir):
 	
 	#generate post
 	code = code + generateheader(files)
-	code = code + generatelinescore(files)
 	code = code + generateboxscore(files)
+	code = code + generatelinescore(files)	
 	code = code + generatescoringplays(files)
 	if files["linescore"].get('data').get('game').get('status') == "Final":
 		s = files["linescore"].get('data').get('game')
@@ -81,33 +81,100 @@ def downloadfiles(dirs):
 			time.sleep(10)
 	return files
 
-	
 def generateheader(files):
 	header = ""
 	game = files["linescore"].get('data').get('game')
 	ogame = files["boxscore"].get('data').get('boxscore')
 	timestring = game.get('time_date') + " " + game.get('ampm')
 	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-	t = timedelta(hours=1) #change depending on team, 0 for east, 1 for central, 2 for mountain, 3 for west coast
-	timezone = "CST" #change this based on team too
+	t = timedelta(hours=0) #change depending on team, 0 for east, 1 for central, 2 for mountain, 3 for west coast
+	timezone = "EST" #change this based on team too
 	date_object = date_object - t
 	weather = files["plays"].get('data').get('game').get('weather')
 	subreddits = getsubreddits(game.get('home_team_name'),game.get('away_team_name'))
-	header = header + "###" + ogame.get('away_fname')
+	header = header + "##" + ogame.get('away_fname')
 	header = header + " @ " + ogame.get('home_fname') + "\n"
-	header = header + "First Pitch|Media||Feed|Channel|Subreddits\n"
-	header = header + ":--|:--|:--:|:--|:--|:--\n"
 	root = files["gamecenter"].getroot()
 	broadcast = root.find('broadcast')
-	header = header + date_object.strftime("%I:%M %p") + " " + timezone + "|**Audio**||" + game.get('home_name_abbrev') + "|" + broadcast[0][0].text + "|" + subreddits[0] + "\n"
-	header = header + "**Weather**| ||" + game.get('away_name_abbrev') + "|" + broadcast[1][0].text + "|" + subreddits[1] + "\n"
-	header = header + weather.get('condition') + " " + weather.get('temp') + " F|**Video**||" + game.get('home_name_abbrev') + "|" + broadcast[0][1].text + "| **Location**\n"
-	header = header + weather.get('wind') + " |||" + game.get('away_name_abbrev') + "|" + broadcast[1][1].text + "|" + game.get('venue') + "\n"
-	header = header + "\n---\n"
+	header = header + "\n**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game.get('venue') + "\n"
+	header = header + "\n**Weather:** " + weather.get('condition') + ", " + weather.get('temp') + " F, " + "Wind " + weather.get('wind') + "\n" 
+	header = header + "\n**Watch and Listen:**\n"
+	header = header + "\n* Radio: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][1].text + " " + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][1].text + "\n"	
+	header = header + "\n* TV: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][0].text + " " + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][0].text + "\n"
+	header = header + "\n**Links:** " + "\n"
+	if ('home_team_name') == "Orioles": 
+		header = header + "\n* " + subreddits[1] + "\n"
+	else:
+		header = header + "\n* " + subreddits[0] + "\n"
+	header = header + "\n* [Live chat with other O's fans](http://webchat.freenode.net/) (channel: #orioles)" + "\n"
+	header = header + "\n* [Fangraphs Live Scoreboard](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime("%Y") + ")" + "\n" 
+	header = header + "\n* [MLB Gameday Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + date_object.strftime("%Y_%m_%d_") + game.get('away_name_abbrev').lower() + "mlb_" + game.get('home_name_abbrev').lower() + "mlb_1&mode=preview)" + "\n"
+	header = header + "\n"
+	header = header + "***BUCK****LE UP!*" + "\n"	
 	return header
+		
+def generateboxscore(files):
+	boxscore = "\n##" + files["linescore"].get('data').get('game').get('away_team_name') + "\n"
+	homebatters = []; awaybatters = []
+	homepitchers = []; awaypitchers = []
+	game = files["boxscore"].get('data').get('boxscore')
+	batting = game.get('batting')
+	for i in range(0,len(batting)):
+		players = batting[i].get('batter')
+		for b in range(0,len(players)):
+			if players[b].get('bo') != None:
+				if batting[i].get('team_flag') == "home":
+					homebatters.append(player.batter(players[b].get('name'), players[b].get('pos'), players[b].get('ab'), players[b].get('r'), players[b].get('h'), players[b].get('rbi'), players[b].get('bb'), players[b].get('so'), players[b].get('avg'), players[b].get('id')))
+				else:	
+					awaybatters.append(player.batter(players[b].get('name'), players[b].get('pos'), players[b].get('ab'), players[b].get('r'), players[b].get('h'), players[b].get('rbi'), players[b].get('bb'), players[b].get('so'), players[b].get('avg'), players[b].get('id')))
+	pitching = game.get('pitching')
+	for i in range(0,len(pitching)):
+		players = pitching[i].get('pitcher')
+		if type(players) is list:
+			for p in range(0,len(players)):
+				if pitching[i].get('team_flag') == "home":
+					homepitchers.append(player.pitcher(players[p].get('name'), players[p].get('out'), players[p].get('h'), players[p].get('r'), players[p].get('er'), players[p].get('bb'), players[p].get('so'), players[p].get('np'), players[p].get('s'), players[p].get('era'), players[p].get('note'), players[p].get('id')))
+				else:
+					awaypitchers.append(player.pitcher(players[p].get('name'), players[p].get('out'), players[p].get('h'), players[p].get('r'), players[p].get('er'), players[p].get('bb'), players[p].get('so'), players[p].get('np'), players[p].get('s'), players[p].get('era'), players[p].get('note'), players[p].get('id')))
+		elif type(players) is dict:
+			if pitching[i].get('team_flag') == "home":
+				homepitchers.append(player.pitcher(players.get('name'), players.get('out'), players.get('h'), players.get('r'), players.get('er'), players.get('bb'), players.get('so'), players.get('np'), players.get('s'), players.get('era'), players.get('note'), players.get('id')))
+			else:
+				awaypitchers.append(player.pitcher(players.get('name'), players.get('out'), players.get('h'), players.get('r'), players.get('er'), players.get('bb'), players.get('so'), players.get('np'), players.get('s'), players.get('era'), players.get('note'), players.get('id')))
+	while len(homebatters) < len(awaybatters):
+		homebatters.append(player.batter())
+	while len(awaybatters) < len(homebatters):
+		awaybatters.append(player.batter())
+	while len(homepitchers) < len(awaypitchers):
+		homepitchers.append(player.pitcher())
+	while len(awaypitchers) < len(homepitchers):
+		awaypitchers.append(player.pitcher())
+	boxscore = boxscore + "|Lineup|Pos|AB|R|H|RBI|BB|SO|BA|" + "\n"
+	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|" + "\n"
+	for i in range(0,len(homebatters)):
+		boxscore = boxscore + str(awaybatters[i]) + "\n"
+	boxscore = boxscore + "\nPitchers|IP|H|R|ER|BB|SO|P-S|ERA|Note|" + "\n"	
+	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
+	boxscore = boxscore + "\n"		
+	for i in range(0,len(homepitchers)):
+		boxscore = boxscore + str(awaypitchers[i]) + "\n"
+	boxscore = boxscore + "\n##" + files["linescore"].get('data').get('game').get('home_team_name') + "\n"		
+	boxscore = boxscore + "Lineup|Pos|AB|R|H|RBI|BB|SO|BA|" + "\n"
+	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
+	boxscore = boxscore + "\n"	
+	for i in range(0,len(homebatters)):
+		boxscore = boxscore + str(homebatters[i]) + "\n"	
+	boxscore = boxscore + "\nPitchers|IP|H|R|ER|BB|SO|P-S|ERA|Note|" + "\n"	
+	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
+	boxscore = boxscore + ":--:|"
+	boxscore = boxscore + "\n"		
+	for i in range(0,len(homepitchers)):
+		boxscore = boxscore + str(homepitchers[i]) + "\n"			
+	boxscore = boxscore + "\n\n"
+	return boxscore
 	
 def generatelinescore(files):
-	linescore = "###Line Score\n"
+	linescore = "\n##Line Score\n"
 	game = files["linescore"].get('data').get('game')
 	lineinfo = game.get('linescore')
 	innings = len(lineinfo) if len(lineinfo) > 9 else 9
@@ -142,72 +209,12 @@ def generatelinescore(files):
 	for j in range(x, innings+1):
 		linescore = linescore + "|"
 	linescore = linescore + game.get('home_team_runs') + "|" + game.get('home_team_hits') + "|" + game.get('home_team_errors')
-	return linescore
-	
-def generateboxscore(files):
-	boxscore = "\n###Live Box Score\n"
-	homebatters = []; awaybatters = []
-	homepitchers = []; awaypitchers = []
-	game = files["boxscore"].get('data').get('boxscore')
-	batting = game.get('batting')
-	for i in range(0,len(batting)):
-		players = batting[i].get('batter')
-		for b in range(0,len(players)):
-			if players[b].get('bo') != None:
-				if batting[i].get('team_flag') == "home":
-					homebatters.append(player.batter(players[b].get('name'), players[b].get('pos'), players[b].get('ab'), players[b].get('r'), players[b].get('h'), players[b].get('rbi'), players[b].get('bb'), players[b].get('so'), players[b].get('avg'), players[b].get('id')))
-				else:	
-					awaybatters.append(player.batter(players[b].get('name'), players[b].get('pos'), players[b].get('ab'), players[b].get('r'), players[b].get('h'), players[b].get('rbi'), players[b].get('bb'), players[b].get('so'), players[b].get('avg'), players[b].get('id')))
-	pitching = game.get('pitching')
-	for i in range(0,len(pitching)):
-		players = pitching[i].get('pitcher')
-		if type(players) is list:
-			for p in range(0,len(players)):
-				if pitching[i].get('team_flag') == "home":
-					homepitchers.append(player.pitcher(players[p].get('name'), players[p].get('pos'), players[p].get('out'), players[p].get('h'), players[p].get('r'), players[p].get('er'), players[p].get('bb'), players[p].get('so'), players[p].get('np'), players[p].get('s'), players[p].get('era'), players[p].get('id')))
-				else:
-					awaypitchers.append(player.pitcher(players[p].get('name'), players[p].get('pos'), players[p].get('out'), players[p].get('h'), players[p].get('r'), players[p].get('er'), players[p].get('bb'), players[p].get('so'), players[p].get('np'), players[p].get('s'), players[p].get('era'), players[p].get('id')))
-		elif type(players) is dict:
-			if pitching[i].get('team_flag') == "home":
-				homepitchers.append(player.pitcher(players.get('name'), players.get('pos'), players.get('out'), players.get('h'), players.get('r'), players.get('er'), players.get('bb'), players.get('so'), players.get('np'), players.get('s'), players.get('era'), players.get('id')))
-			else:
-				awaypitchers.append(player.pitcher(players.get('name'), players.get('pos'), players.get('out'), players.get('h'), players.get('r'), players.get('er'), players.get('bb'), players.get('so'), players.get('np'), players.get('s'), players.get('era'), players.get('id')))
-	while len(homebatters) < len(awaybatters):
-		homebatters.append(player.batter())
-	while len(awaybatters) < len(homebatters):
-		awaybatters.append(player.batter())
-	while len(homepitchers) < len(awaypitchers):
-		homepitchers.append(player.pitcher())
-	while len(awaypitchers) < len(homepitchers):
-		awaypitchers.append(player.pitcher())
-		
-		
-		
-	boxscore = boxscore + "**" + files["linescore"].get('data').get('game').get('away_name_abbrev') +"**|Pos|AB|R|H|RBI|BB|SO|BA|"
-	boxscore = boxscore + "|"
-	boxscore = boxscore + "**" + files["linescore"].get('data').get('game').get('home_name_abbrev') +"**|Pos|AB|R|H|RBI|BB|SO|BA|"
-	boxscore = boxscore + "\n"
-	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
-	boxscore = boxscore + ":--:|"
-	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
-	boxscore = boxscore + "\n"
-	for i in range(0,len(homebatters)):
-		boxscore = boxscore + str(awaybatters[i]) + "|" + str(homebatters[i]) + "\n"
-	boxscore = boxscore + "\n**" + files["linescore"].get('data').get('game').get('away_name_abbrev') +"**|Pos|IP|H|R|ER|BB|SO|P-S|ERA|"
-	boxscore = boxscore + "|"
-	boxscore = boxscore + "**" + files["linescore"].get('data').get('game').get('home_name_abbrev') +"**|Pos|IP|H|R|ER|BB|SO|P-S|ERA|"
-	boxscore = boxscore + "\n"
-	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
-	boxscore = boxscore + ":--:|"
-	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
-	boxscore = boxscore + "\n"
-	for i in range(0,len(homepitchers)):
-		boxscore = boxscore + str(awaypitchers[i]) + "|" + str(homepitchers[i]) + "\n"
-	boxscore = boxscore + "---\n\n"
-	return boxscore
+	linescore = linescore + "\n\n"
+	return linescore	
 	
 def generatescoringplays(files):
-	scoringplays = "Inning|Play|Score\n"
+	scoringplays = "\n##Scoring Plays\n"
+	scoringplays = scoringplays + "Inning|Play|Score\n"
 	scoringplays = scoringplays + ":--:|:--|:--:\n"
 	root = files["scores"].getroot()
 	game = files["linescore"].get('data').get('game')
@@ -267,7 +274,7 @@ def getsubreddits(homename, awayname):
 		"Giants" : "/r/SFGiants",
 		"Diamondbacks" : "/r/azdiamondbacks",
 		"Rockies" : "/r/ColoradoRockies",
-		"Dodgers" : "/r/Dodgers",
+		"Dodgers" : "/r/csssandboxtest",
 		"Padres" : "/r/Padres",
 		"Phillies" : "/r/Phillies",
 		"Mets" : "/r/NewYorkMets",
