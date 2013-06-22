@@ -8,7 +8,7 @@ import urllib2
 import simplejson as json
 	
 r = praw.Reddit(user_agent='Game Discission Thread Generator Bot by /u/DetectiveWoofles') 
-r.login('*****', '*****')
+r.login('bizarrogamethreads', 'pa22word')
 
 while True:
 	
@@ -31,7 +31,7 @@ while True:
 	html = response.readlines()
 	directories = []
 	for v in html:
-		if "minmlb" in v:
+		if "balmlb" in v:
 			v = v[v.index("\"")+1:len(v)]
 			v = v[0:v.index("\"")]
 			directories.append(url + v)
@@ -42,7 +42,7 @@ while True:
 		if not timecheck.ppcheck(d):
 			while True:
 				try:
-					sub = r.submit('test', title, editor.generatecode(d))
+					sub = r.submit('CSSsandboxtest', title, editor.generatecode(d))
 					break
 				except Exception, err:
 					print err
