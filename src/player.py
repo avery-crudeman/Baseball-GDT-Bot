@@ -5,9 +5,8 @@ import math
 
 class pitcher:
 		
-	def __init__(self, name="", pos="", o="", h="", r="", er="", bb="", so="", p="", s="", era="", id=""):
+	def __init__(self, name="", o="", h="", r="", er="", bb="", so="", p="", s="", era="", note="", id=""):
 		self.name = name
-		self.pos = pos
 		self.o = o
 		self.h = h
 		self.r = r
@@ -17,6 +16,7 @@ class pitcher:
 		self.p = p
 		self.s = s
 		self.era = era
+		self.note = note
 		self.id = id
 		
 	def __str__(self):
@@ -27,7 +27,7 @@ class pitcher:
 			ip = str(math.floor((float(self.o)/3.0)*10)/10)
 			s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")"
 			ps = str(self.p) + "-" + str(self.s)
-		s = s + "|" + str(self.pos) + "|" + ip + "|" + str(self.h) + "|" + str(self.r) + "|" + str(self.er) + "|" + str(self.bb) + "|" + str(self.so) + "|" + ps + "|" + self.era + "|"
+		s = s + "|" + ip + "|" + str(self.h) + "|" + str(self.r) + "|" + str(self.er) + "|" + str(self.bb) + "|" + str(self.so) + "|" + ps + "|" + self.era + "|" + str(self.note) + "|"
 		return s
 		
 		
