@@ -1,13 +1,12 @@
 import player, editor
 from datetime import datetime
-import time
 
 import praw
 import urllib2
 import simplejson as json
 
 r = praw.Reddit(user_agent='Game Discission Thread Generator Bot by /u/DetectiveWoofles') 
-r.login('*****', '*****')	
+r.login('bizarrogamethreads', 'pa22word')	
 
 # getting dirc
 d = datetime.today()
@@ -20,13 +19,12 @@ html = reponse.readlines()
 directories = []
 # print html
 for v in html:
-	if "minmlb" in v:
+	if "balmlb" in v:
 		v = v[v.index("\"")+1:len(v)]
 		v = v[0:v.index("\"")]
 		directories.append(url + v)
-title = editor.generatetitle(directories[0]);
-r.submit('test', title, editor.generatecode(directories[0]))
-# sub = r.get_submission(submission_id='1gmia3')
-while True:
-	sub.edit(editor.generatecode(directories[0]))
-	time.sleep(10)
+# for v in directories:
+	# generatecode(v)
+# r.submit('test', 'test', editor.generatecode(directories[0]))
+sub = r.get_submission(submission_id='1grtsi')
+sub.edit(editor.generatecode(directories[0]))
