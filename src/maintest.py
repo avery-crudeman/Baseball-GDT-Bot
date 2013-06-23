@@ -6,7 +6,7 @@ import urllib2
 import simplejson as json
 
 r = praw.Reddit(user_agent='Game Discission Thread Generator Bot by /u/DetectiveWoofles') 
-r.login('bizarrogamethreads', 'pa22word')	
+r.login('****', '****')	
 
 # getting dirc
 d = datetime.today()
