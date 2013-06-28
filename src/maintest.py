@@ -26,5 +26,5 @@ for v in html:
 # for v in directories:
 	# generatecode(v)
 # r.submit('test', 'test', editor.generatecode(directories[0]))
-sub = r.get_submission(submission_id='1grtsi')
+sub = r.get_submission(submission_id='REDDITPOSTID')
 sub.edit(editor.generatecode(directories[0]))
