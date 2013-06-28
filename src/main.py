@@ -42,7 +42,7 @@ while True:
 		if not timecheck.ppcheck(d):
 			while True:
 				try:
-					sub = r.submit('CSSsandboxtest', title, editor.generatecode(d))
+					sub = r.submit('SUBREDDITNAME', title, editor.generatecode(d))
 					break
 				except Exception, err:
 					print err
