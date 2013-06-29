@@ -108,7 +108,6 @@ def generateheader(files):
 		header = header + "\n* " + subreddits[0] + "\n"
 	header = header + "\n* [Live chat with other O's fans](http://webchat.freenode.net/) (channel: #orioles)" + "\n"
 	header = header + "\n* [Fangraphs Live Scoreboard](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime("%Y") + ")" + "\n" 
-	header = header + "\n* [MLB Gameday Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + date_object.strftime("%Y_%m_%d_") + game.get('away_name_abbrev').lower() + "mlb_" + game.get('home_name_abbrev').lower() + "mlb_1&mode=preview)" + "\n"
 	header = header + "\n"
 	header = header + "***BUCK****LE UP!*" + "\n"	
 	return header
