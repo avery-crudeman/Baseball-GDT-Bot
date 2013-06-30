@@ -51,9 +51,9 @@ def generatecode(dir):
 	if files["linescore"].get('data').get('game').get('status') == "Final":
 		s = files["linescore"].get('data').get('game')
 		code = code + "###FINAL "
-		if s.get("home_team_runs") < s.get("away_team_runs"):
+		if int(s.get("home", 1)) < int(s.get("away", 0)):
 			code = code + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get("away_team_name")
-		elif s.get("home_team_runs") > s.get("away_team_runs"):
+		elif int(s.get("home", 1)) > int(s.get("away", 0)):
 			code = code + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get("home_team_name")
 		else:
 			code = code + "SOMETHING WENT HORRIBLY WRONG"
@@ -102,7 +102,7 @@ def generateheader(files):
 	header = header + "\n* Radio: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][1].text + " " + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][1].text + "\n"	
 	header = header + "\n* TV: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][0].text + " " + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][0].text + "\n"
 	header = header + "\n**Links:** " + "\n"
-	if ('home_team_name') == "Orioles": 
+	if game.get('home_team_name') == "Orioles": 
 		header = header + "\n* " + subreddits[1] + "\n"
 	else:
 		header = header + "\n* " + subreddits[0] + "\n"
@@ -236,10 +236,10 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + actions[len(actions)-1].get("des")
 		else:
 			scoringplays = scoringplays + s.get("pbp")
-		scoringplays = scoringplays + "|"
-		if s.get("home") < s.get("away"):
+		scoringplays = scoringplays + "|"	
+		if int(s.get("home", 0)) < int(s.get("away", 0)):
 			scoringplays = scoringplays + s.get("away") + "-" + s.get("home") + " " + game.get("away_team_name")
-		elif s.get("home") > s.get("away"):
+		elif int(s.get("home", 0)) > int(s.get("away", 0)):
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " " + game.get("home_team_name")
 		else:
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " Tied"
@@ -264,7 +264,7 @@ def getsubreddits(homename, awayname):
 		"Yankees" : "/r/Yankees",
 		"Blue Jays" : "/r/TorontoBlueJays",
 		"Rays" : "/r/TampaBayRays",
-		"Orioles" : "/r/Orioles",
+		"Orioles" : "/r/CSSsandboxtest",
 		"Cardinals" : "/r/Cardinals",
 		"Reds" : "/r/Reds",
 		"Pirates" : "/r/Buccos",
@@ -284,3 +284,5 @@ def getsubreddits(homename, awayname):
 	subreddits.append(options[homename])
 	subreddits.append(options[awayname])
 	return subreddits
+	
+	
