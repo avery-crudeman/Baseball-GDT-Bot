@@ -44,21 +44,36 @@ def generatecode(dir):
 	files = downloadfiles(dirs)
 	
 	#generate post
+	game = files["linescore"].get('data').get('game')
 	code = code + generateheader(files)
 	code = code + generateboxscore(files)
 	code = code + generatelinescore(files)	
 	code = code + generatescoringplays(files)
+	s = files["linescore"].get('data').get('game')
 	if files["linescore"].get('data').get('game').get('status') == "Final":
-		s = files["linescore"].get('data').get('game')
-		code = code + "###FINAL "
-		if int(s.get("home", 1)) < int(s.get("away", 0)):
+		code = code + "##FINAL: "
+		if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
 			code = code + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get("away_team_name")
-		elif int(s.get("home", 1)) > int(s.get("away", 0)):
+			if game.get('home_team_name') == "Orioles":
+				code = code + ". There is no joy in Mudville." + "\n"
+				code = code + generatedecisions(files)
+			else:
+				code=code + " Magic (Feel It Happen)" + "\n"
+				code = code + generatedecisions(files)
+				
+		elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
 			code = code + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get("home_team_name")
+			if game.get('home_team_name') == "Orioles":
+				code = code + " Magic (Feel It Happen)" + "\n"
+				code = code + generatedecisions(files)
+			else:
+				code=code + ". There is no joy in Mudville." + "\n"
+				code = code + generatedecisions(files)				
 		else:
-			code = code + "SOMETHING WENT HORRIBLY WRONG"
+			code = code + "SOMETHING WENT HORRIBLY WRONG"	
 	if files["linescore"].get('data').get('game').get('status') == "Postponed":
 		code = code + "###POSTPONED"
+	code = code + "\n" + "###Last update @ " + datetime.now().strftime("%H:%M:%S")
 	return code
 
 def downloadfiles(dirs):
@@ -99,8 +114,14 @@ def generateheader(files):
 	header = header + "\n**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game.get('venue') + "\n"
 	header = header + "\n**Weather:** " + weather.get('condition') + ", " + weather.get('temp') + " F, " + "Wind " + weather.get('wind') + "\n" 
 	header = header + "\n**Watch and Listen:**\n"
-	header = header + "\n* Radio: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][1].text + " " + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][1].text + "\n"	
-	header = header + "\n* TV: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][0].text + " " + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][0].text + "\n"
+	if not isinstance(broadcast[0][1].text, type(None)):
+		header = header + "\n* Radio: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][1].text + " "	
+	if not isinstance(broadcast[1][1].text, type(None)):	
+		header = header + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][1].text + "\n"	
+	if not isinstance(broadcast[0][0].text, type(None)):
+		header = header + "\n* TV: " + "**" + game.get('home_name_abbrev') + ":** " + broadcast[0][0].text + " "
+	if not isinstance(broadcast[1][0].text, type(None)):
+		header= header + "**" + game.get('away_name_abbrev') + ":** " + broadcast[1][0].text + "\n"
 	header = header + "\n**Links:** " + "\n"
 	if game.get('home_team_name') == "Orioles": 
 		header = header + "\n* " + subreddits[1] + "\n"
@@ -108,8 +129,7 @@ def generateheader(files):
 		header = header + "\n* " + subreddits[0] + "\n"
 	header = header + "\n* [Live chat with other O's fans](http://webchat.freenode.net/) (channel: #orioles)" + "\n"
 	header = header + "\n* [Fangraphs Live Scoreboard](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime("%Y") + ")" + "\n" 
-	header = header + "\n"
-	header = header + "***BUCK****LE UP!*" + "\n"	
+	header = header + "\n ***BUCK***LE UP!" + "\n"	
 	return header
 		
 def generateboxscore(files):
@@ -152,8 +172,8 @@ def generateboxscore(files):
 	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|" + "\n"
 	for i in range(0,len(homebatters)):
 		boxscore = boxscore + str(awaybatters[i]) + "\n"
-	boxscore = boxscore + "\nPitchers|IP|H|R|ER|BB|SO|P-S|ERA|Note|" + "\n"	
-	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
+	boxscore = boxscore + "\nPitchers|IP|H|R|ER|BB|SO|P-S|ERA|" + "\n"	
+	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
 	boxscore = boxscore + "\n"		
 	for i in range(0,len(homepitchers)):
 		boxscore = boxscore + str(awaypitchers[i]) + "\n"
@@ -163,9 +183,8 @@ def generateboxscore(files):
 	boxscore = boxscore + "\n"	
 	for i in range(0,len(homebatters)):
 		boxscore = boxscore + str(homebatters[i]) + "\n"	
-	boxscore = boxscore + "\nPitchers|IP|H|R|ER|BB|SO|P-S|ERA|Note|" + "\n"	
-	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
-	boxscore = boxscore + ":--:|"
+	boxscore = boxscore + "\nPitchers|IP|H|R|ER|BB|SO|P-S|ERA|" + "\n"	
+	boxscore = boxscore + ":--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
 	boxscore = boxscore + "\n"		
 	for i in range(0,len(homepitchers)):
 		boxscore = boxscore + str(homepitchers[i]) + "\n"			
@@ -175,6 +194,7 @@ def generateboxscore(files):
 def generatelinescore(files):
 	linescore = "\n##Line Score\n"
 	game = files["linescore"].get('data').get('game')
+	subreddits = getsubreddits(game.get('home_team_name'),game.get('away_team_name'))		
 	lineinfo = game.get('linescore')
 	innings = len(lineinfo) if len(lineinfo) > 9 else 9
 	curinning = len(lineinfo)
@@ -184,7 +204,7 @@ def generatelinescore(files):
 	linescore = linescore + "**R**|**H**|**E**\n"
 	for i in range(0, innings+4):
 		linescore = linescore + ":--:|"
-	linescore = linescore + "\n" + game.get('away_name_abbrev') + "|"
+	linescore = linescore + "\n" + "[](" + subreddits[1] + ")" + "|"
 	x = 1
 	if type(lineinfo) is list:
 		for v in lineinfo:
@@ -196,7 +216,7 @@ def generatelinescore(files):
 	for i in range(x, innings+1):
 		linescore = linescore + "|"
 	linescore = linescore + game.get('away_team_runs') + "|" + game.get('away_team_hits') + "|" + game.get('away_team_errors')
-	linescore = linescore + "\n" + game.get('home_name_abbrev') + "|"
+	linescore = linescore + "\n" + "[](" + subreddits[0] + ")" "|"
 	x = 1
 	if type(lineinfo) is list:
 		for v in lineinfo:
@@ -231,21 +251,58 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + currinning
 		else:
 			scoringplays = scoringplays + " |"
-		if s.get("pbp") == "":
+		if "scores" not in s.find('atbat').get('des') and s.get("pbp") == "":
+			actions = s.findall("action")
+			scoringplays = scoringplays + actions[len(actions)-1].get("des")
+		elif s.get("pbp") == "" :
+			scoringplays = scoringplays + s.find('atbat').get('des')
+		elif "scores" not in s.get("pbp") and len(s.findall("action")) > 0:
 			actions = s.findall("action")
 			scoringplays = scoringplays + actions[len(actions)-1].get("des")
 		else:
 			scoringplays = scoringplays + s.get("pbp")
 		scoringplays = scoringplays + "|"	
-		if int(s.get("home", 0)) < int(s.get("away", 0)):
+		if int(s.get("home")) < int(s.get("away")):
 			scoringplays = scoringplays + s.get("away") + "-" + s.get("home") + " " + game.get("away_team_name")
-		elif int(s.get("home", 0)) > int(s.get("away", 0)):
+		elif int(s.get("home")) > int(s.get("away")):
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " " + game.get("home_team_name")
 		else:
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " Tied"
 		scoringplays = scoringplays + "\n"
 	scoringplays = scoringplays + "\n"
-	return scoringplays
+	scoringplays = scoringplays + "\n"
+	return scoringplays			
+	
+def generatedecisions(files):	
+	decisions = "\n"
+	homepitchers = []; awaypitchers = []
+	game = files["boxscore"].get('data').get('boxscore')
+	team = files["linescore"].get('data').get('game')
+	subreddits = getsubreddits(team.get('home_team_name'),team.get('away_team_name'))	
+	pitching = game.get('pitching')
+	
+	for i in range(0,len(pitching)):
+		players = pitching[i].get('pitcher')
+		if type(players) is list:
+			for p in range(0,len(players)):
+				if pitching[i].get('team_flag') == "home":
+					homepitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
+				else:
+					awaypitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
+		elif type(players) is dict:
+			if pitching[i].get('team_flag') == "home":
+				homepitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
+			else:
+				awaypitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
+	decisions = decisions + "|Decisions|" + "\n"	
+	decisions = decisions + "|:--|" + "\n"	
+	decisions = decisions + "|" + "[](" + subreddits[1] + ")" 
+	for i in range(0,len(awaypitchers)):	
+		decisions = decisions + str(awaypitchers[i]) + " "
+	decisions = decisions + "\n" + "|" + "[](" + subreddits[0] + ")" 
+	for i in range(0,len(homepitchers)):	
+		decisions = decisions + str(homepitchers[i])			
+	return decisions
 
 def getsubreddits(homename, awayname):
 	subreddits = []
@@ -264,7 +321,7 @@ def getsubreddits(homename, awayname):
 		"Yankees" : "/r/Yankees",
 		"Blue Jays" : "/r/TorontoBlueJays",
 		"Rays" : "/r/TampaBayRays",
-		"Orioles" : "/r/CSSsandboxtest",
+		"Orioles" : "/r/Orioles",
 		"Cardinals" : "/r/Cardinals",
 		"Reds" : "/r/Reds",
 		"Pirates" : "/r/Buccos",
@@ -273,7 +330,7 @@ def getsubreddits(homename, awayname):
 		"Giants" : "/r/SFGiants",
 		"Diamondbacks" : "/r/azdiamondbacks",
 		"Rockies" : "/r/ColoradoRockies",
-		"Dodgers" : "/r/csssandboxtest",
+		"Dodgers" : "/r/Dodgers",
 		"Padres" : "/r/Padres",
 		"Phillies" : "/r/Phillies",
 		"Mets" : "/r/NewYorkMets",
@@ -284,5 +341,3 @@ def getsubreddits(homename, awayname):
 	subreddits.append(options[homename])
 	subreddits.append(options[awayname])
 	return subreddits
-	
-	
