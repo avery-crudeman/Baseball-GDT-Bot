@@ -1,7 +1,6 @@
 # does all the post generating and editing
 
 import player
-import decisions
 
 import xml.etree.ElementTree as ET
 import urllib2
