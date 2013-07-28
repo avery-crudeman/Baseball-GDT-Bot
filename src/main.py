@@ -56,7 +56,7 @@ while True:
 					except Exception, err:
 						print "Couldn't submit edits, trying again..."
 						time.sleep(10)
-				if "###FINAL" in str:
+				if "|Decisions|" in str:
 					break
 				elif "###POSTPONED" in str:
 					break
