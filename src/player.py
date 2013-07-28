@@ -16,7 +16,6 @@ class pitcher:
 		self.p = p
 		self.s = s
 		self.era = era
-		self.note = note
 		self.id = id
 		
 	def __str__(self):
@@ -27,7 +26,7 @@ class pitcher:
 			ip = str(math.floor((float(self.o)/3.0)*10)/10)
 			s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")"
 			ps = str(self.p) + "-" + str(self.s)
-		s = s + "|" + ip + "|" + str(self.h) + "|" + str(self.r) + "|" + str(self.er) + "|" + str(self.bb) + "|" + str(self.so) + "|" + ps + "|" + self.era + "|" + str(self.note) + "|"
+		s = s + "|" + ip + "|" + str(self.h) + "|" + str(self.r) + "|" + str(self.er) + "|" + str(self.bb) + "|" + str(self.so) + "|" + ps + "|" + self.era 
 		return s
 		
 		
@@ -52,5 +51,41 @@ class batter:
 		s = " "
 		if self.id != "":
 			s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")"
-		s = s + "|" + str(self.pos) + "|" + str(self.ab) + "|" + str(self.r) + "|" + str(self.h) + "|" + str(self.rbi) + "|" + str(self.bb) + "|" + str(self.so) + "|" + str(self.ba) + "|"
+		s = s + "|" + str(self.pos) + "|" + str(self.ab) + "|" + str(self.r) + "|" + str(self.h) + "|" + str(self.rbi) + "|" + str(self.bb) + "|" + str(self.so) + "|" + str(self.ba) 
 		return s
+
+
+class decision:
+		
+	def __init__(self, name="", note="", id=""):
+		self.name = name
+		self.note = note
+		self.id = id
+		
+	def __str__(self):
+		w = ""
+		h = ""
+		s = ""
+		l = ""
+		b = ""
+		n = ""		
+		
+		if 'W' in str(self.note):
+			w = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")" + " " + str(self.note) + " "
+		else:
+			if 'H' in str(self.note):
+				h = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")" + " " + str(self.note) + " "
+			else:
+				if 'S' in str(self.note):
+					s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")" + " " + str(self.note) + " "
+				else:
+					if 'L' in str(self.note):
+						l = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")" + " " + str(self.note) + " "
+					else:
+						if 'B' in str(self.note):
+							s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")" + " " + str(self.note) + " "
+						else:
+							if 'N' in str(self.note):
+								n = ""
+		return w + h + s + l + b + n
+	
