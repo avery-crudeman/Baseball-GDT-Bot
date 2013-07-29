@@ -177,8 +177,7 @@ def generateboxscore(files):
 	while len(homepitchers) < len(awaypitchers):
 		homepitchers.append(player.pitcher())
 	while len(awaypitchers) < len(homepitchers):
-		awaypitchers.append(player.pitcher())
-		
+		awaypitchers.append(player.pitcher())	
 	boxscore = boxscore + "\n"
 	boxscore = boxscore + "[](" + teamflair[1] + ")|Pos|AB|R|H|RBI|BB|SO|BA|"
 	boxscore = boxscore + "[](" + teamflair[0] + ")|Pos|AB|R|H|RBI|BB|SO|BA|"
@@ -250,7 +249,6 @@ def generatescoringplays(files):
 	scoringplays = scoringplays + "\n##Scoring Plays\n"
 	scoringplays = scoringplays + "Inning|Play|Score\n"
 	scoringplays = scoringplays + ":--:|:--|:--:\n"
-
 	for s in scores:
 		if s.get("top_inning") == "Y":
 			inningcheck = "Top "
@@ -263,18 +261,13 @@ def generatescoringplays(files):
 		else:
 			scoringplays = scoringplays + " |"
 		if s.get("pbp") == "":
-		
 			actions = s.findall("action")
-			
 			if "scores" not in s.find('atbat').get('des') and len(s.findall("action")) > 0:
 				scoringplays = scoringplays + actions[len(actions)-1].get("des")
-		
 			elif len(s.findall("action")) > 0 and "scores" not in actions[len(actions)-1].get("des"):
 				scoringplays = scoringplays + s.find('atbat').get('des')
-		
 			elif len(s.findall("action")) == 0:
-				scoringplays = scoringplays + s.find('atbat').get('des')
-				
+				scoringplays = scoringplays + s.find('atbat').get('des')	
 		else:
 			scoringplays = scoringplays + s.get("pbp")		
 		scoringplays = scoringplays + "|"	
