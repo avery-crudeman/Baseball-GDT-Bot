@@ -129,10 +129,11 @@ def generateheader(files):
 		header = header + "**Radio:** " + broadcast[1][1].text + "\n"	
 	header = header + "\n"	
 	header = header + "##Links\n"
-	header = header + "|MLB|Fangraphs|IRC Chat|Opponents|\n"
-	header = header + "|:--:|:--:|:--:|:--:|\n"
+	header = header + "|MLB|Fangraphs|Brooks Baseball|IRC Chat|Opponents|\n"
+	header = header + "|:--:|:--:|:--:|:--:|:--:|\n"
 	header = header + "[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")|"
-	header = header + " [Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime("%Y") + ")|" 	
+	header = header + " [Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime("%Y") + ")|" 
+	header = header + " [Strikezone Map](http://brooksbaseball.net/pfxVB/zoneTrack.php?month=" + date_object.strftime("%m") + "&day=" + date_object.strftime("%d") + "&year=" + date_object.strftime("%Y") + "&game=gid_" + game.get('gameday_link') + "%2F&prevDate=" + date_object.strftime("%m%d") + ")|"
 	header = header + " [Freenode: #orioles](http://webchat.freenode.net/)|" 
 	if game.get('home_team_name') == "Orioles": 
 		header = header + subreddits[1]
@@ -177,7 +178,8 @@ def generateboxscore(files):
 	while len(homepitchers) < len(awaypitchers):
 		homepitchers.append(player.pitcher())
 	while len(awaypitchers) < len(homepitchers):
-		awaypitchers.append(player.pitcher())	
+		awaypitchers.append(player.pitcher())
+		
 	boxscore = boxscore + "\n"
 	boxscore = boxscore + "[](" + teamflair[1] + ")|Pos|AB|R|H|RBI|BB|SO|BA|"
 	boxscore = boxscore + "[](" + teamflair[0] + ")|Pos|AB|R|H|RBI|BB|SO|BA|"
@@ -249,6 +251,7 @@ def generatescoringplays(files):
 	scoringplays = scoringplays + "\n##Scoring Plays\n"
 	scoringplays = scoringplays + "Inning|Play|Score\n"
 	scoringplays = scoringplays + ":--:|:--|:--:\n"
+
 	for s in scores:
 		if s.get("top_inning") == "Y":
 			inningcheck = "Top "
@@ -261,13 +264,18 @@ def generatescoringplays(files):
 		else:
 			scoringplays = scoringplays + " |"
 		if s.get("pbp") == "":
+		
 			actions = s.findall("action")
+			
 			if "scores" not in s.find('atbat').get('des') and len(s.findall("action")) > 0:
 				scoringplays = scoringplays + actions[len(actions)-1].get("des")
+		
 			elif len(s.findall("action")) > 0 and "scores" not in actions[len(actions)-1].get("des"):
 				scoringplays = scoringplays + s.find('atbat').get('des')
+		
 			elif len(s.findall("action")) == 0:
-				scoringplays = scoringplays + s.find('atbat').get('des')	
+				scoringplays = scoringplays + s.find('atbat').get('des')
+				
 		else:
 			scoringplays = scoringplays + s.get("pbp")		
 		scoringplays = scoringplays + "|"	
