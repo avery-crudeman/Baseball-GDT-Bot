@@ -413,4 +413,42 @@ def getteamflair(homename, awayname):
 	}
 	teamflair.append(options[homename])
 	teamflair.append(options[awayname])
-	return teamflair	
+	return teamflair
+	
+def getnotes(homename, awayname):
+	notes = []
+	options = {
+		"Twins" : "min",
+		"White Sox" : "cws",
+		"Tigers" : "det",
+		"Royals" : "kc",
+		"Indians" : "cle",
+		"Rangers" : "tex",
+		"Astros" : "hou",
+		"Athletics" : "oak",
+		"Angels" : "ana",
+		"Mariners" : "sea",
+		"Red Sox" : "bos",
+		"Yankees" : "nyy",
+		"Blue Jays" : "tor",
+		"Rays" : "tb",
+		"Orioles" : "bal",
+		"Cardinals" : "stl",
+		"Reds" : "cin",
+		"Pirates" : "pit",
+		"Cubs" : "chc",
+		"Brewers" : "mil",
+		"Giants" : "sf",
+		"Diamondbacks" : "ari",
+		"Rockies" : "col",
+		"Dodgers" : "la",
+		"Padres" : "sd",
+		"Phillies" : "phi",
+		"Mets" : "nym",
+		"Marlins" : "mia",
+		"Nationals" : "was",
+		"Braves" : "atl"
+	}
+	notes.append(options[homename])
+	notes.append(options[awayname])
+	return notes	
