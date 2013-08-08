@@ -353,7 +353,7 @@ def getsubreddits(homename, awayname):
 		"Angels" : "/r/AngelsBaseball",
 		"Mariners" : "/r/Mariners",
 		"Red Sox" : "/r/RedSox",
-		"Yankees" : "/r/Yankees",
+		"Yankees" : "/r/NYYankees",
 		"Blue Jays" : "/r/TorontoBlueJays",
 		"Rays" : "/r/TampaBayRays",
 		"Orioles" : "/r/Orioles",
