@@ -23,7 +23,9 @@ class pitcher:
 		ip = ""
 		ps = ""
 		if self.id != "":
-			ip = str(math.floor((float(self.o)/3.0)*10)/10)
+			ipf = str(math.floor(float(self.o)/3))
+			ipd = str(math.floor(float(self.o)%3))
+			ip = ipf[0][0] + "." + ipd[0][0]
 			s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")"
 			ps = str(self.p) + "-" + str(self.s)
 		s = s + "|" + ip + "|" + str(self.h) + "|" + str(self.r) + "|" + str(self.er) + "|" + str(self.bb) + "|" + str(self.so) + "|" + ps + "|" + self.era 
