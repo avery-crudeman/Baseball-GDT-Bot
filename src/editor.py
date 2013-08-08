@@ -108,6 +108,28 @@ def generateheader(files):
 	subreddits = getsubreddits(game.get('home_team_name'),game.get('away_team_name'))	
 	root = files["gamecenter"].getroot()
 	broadcast = root.find('broadcast')
+	notes = getnotes(game.get('home_team_name'),game.get('away_team_name'))
+	today = datetime.today()
+	request0 = urllib2.Request("http://www.mlb.com/pressbox_open/components/clubs/mc_archive_frame.jsp?c_id=" + notes[0] +"&assetlist=game-notes&list_year=" + today.strftime("%Y") + "&list_month=" + today.strftime("%m"))
+	while True:
+		try:	
+			response0 = urllib2.urlopen(request0)
+			soup0 = BeautifulSoup(response0)
+			variable0=soup0.find('a', href=re.compile('^/documents/'))['href']
+			break
+		except:
+			variable0 = "/404/"
+			break
+	request1 = urllib2.Request("http://www.mlb.com/pressbox_open/components/clubs/mc_archive_frame.jsp?c_id=" + notes[1] +"&assetlist=game-notes&list_year=" + today.strftime("%Y") + "&list_month=" + today.strftime("%m"))
+	while True:
+		try:	
+			response1 = urllib2.urlopen(request1)
+			soup1 = BeautifulSoup(response1)
+			variable1=soup1.find('a', href=re.compile('^/documents/'))['href']
+			break
+		except:
+			variable1 = "/404/"
+			break		
 	header = header + "\n##"
 	header = header + ogame.get('away_fname') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
 	header = header + " @ "
@@ -139,6 +161,10 @@ def generateheader(files):
 		header = header + subreddits[1]
 	else:
 		header = header + subreddits[0]
+	header = header + "\n\n"
+	header = header + "|[](" + teamflair[1] + ")|[](" + teamflair[0] + ")|\n"
+	header = header + "|:--:|:--:|\n"
+	header = header +  "[Game Notes](http://www.mlb.com" + variable1 + ")|[Game Notes](http://www.mlb.com" + variable0 + ")|"		
 	return header
 		
 def generateboxscore(files):
@@ -263,21 +289,13 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + currinning
 		else:
 			scoringplays = scoringplays + " |"
-		if s.get("pbp") == "":
-		
-			actions = s.findall("action")
-			
-			if "scores" not in s.find('atbat').get('des') and len(s.findall("action")) > 0:
-				scoringplays = scoringplays + actions[len(actions)-1].get("des")
-		
-			elif len(s.findall("action")) > 0 and "scores" not in actions[len(actions)-1].get("des"):
-				scoringplays = scoringplays + s.find('atbat').get('des')
-		
-			elif len(s.findall("action")) == 0:
-				scoringplays = scoringplays + s.find('atbat').get('des')
-				
-		else:
-			scoringplays = scoringplays + s.get("pbp")		
+		actions = s.findall("action")	
+		if s.find('atbat').get('score') == "T":
+			scoringplays = scoringplays + s.find('atbat').get('des')	
+		elif actions[len(actions)-1].get("score") == "T":	
+			scoringplays = scoringplays + actions[len(actions)-1].get("des")
+		else:		
+			scoringplays = scoringplays + s.get("pbp")	
 		scoringplays = scoringplays + "|"	
 		if int(s.get("home")) < int(s.get("away")):
 			scoringplays = scoringplays + s.get("away") + "-" + s.get("home") + " " + "[](" + teamflair[1] + ")"
