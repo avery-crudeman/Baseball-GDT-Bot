@@ -8,6 +8,9 @@ import simplejson as json
 from datetime import datetime, timedelta
 import time
 
+from bs4 import BeautifulSoup
+import re
+
 def generatetitle(dir):
 	title = "GAME THREAD: "
 	while True:
@@ -129,7 +132,7 @@ def generateheader(files):
 			break
 		except:
 			variable1 = "/404/"
-			break		
+			break	
 	header = header + "\n##"
 	header = header + ogame.get('away_fname') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
 	header = header + " @ "
@@ -150,7 +153,7 @@ def generateheader(files):
 	if not isinstance(broadcast[1][1].text, type(None)):	
 		header = header + "**Radio:** " + broadcast[1][1].text + "\n"	
 	header = header + "\n"	
-	header = header + "##Links\n"
+	header = header + "##Links\n"	
 	header = header + "|MLB|Fangraphs|Brooks Baseball|IRC Chat|Opponents|\n"
 	header = header + "|:--:|:--:|:--:|:--:|:--:|\n"
 	header = header + "[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")|"
@@ -164,7 +167,7 @@ def generateheader(files):
 	header = header + "\n\n"
 	header = header + "|[](" + teamflair[1] + ")|[](" + teamflair[0] + ")|\n"
 	header = header + "|:--:|:--:|\n"
-	header = header +  "[Game Notes](http://www.mlb.com" + variable1 + ")|[Game Notes](http://www.mlb.com" + variable0 + ")|"		
+	header = header +  "[Game Notes](http://www.mlb.com" + variable1 + ")|[Game Notes](http://www.mlb.com" + variable0 + ")|"
 	return header
 		
 def generateboxscore(files):
@@ -205,7 +208,6 @@ def generateboxscore(files):
 		homepitchers.append(player.pitcher())
 	while len(awaypitchers) < len(homepitchers):
 		awaypitchers.append(player.pitcher())
-		
 	boxscore = boxscore + "\n"
 	boxscore = boxscore + "[](" + teamflair[1] + ")|Pos|AB|R|H|RBI|BB|SO|BA|"
 	boxscore = boxscore + "[](" + teamflair[0] + ")|Pos|AB|R|H|RBI|BB|SO|BA|"
@@ -289,13 +291,27 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + currinning
 		else:
 			scoringplays = scoringplays + " |"
+		
 		actions = s.findall("action")	
 		if s.find('atbat').get('score') == "T":
-			scoringplays = scoringplays + s.find('atbat').get('des')	
+			while True:
+				try:
+					scoringplays = scoringplays + s.find('atbat').get('des')
+					break
+				except:
+					scoringplays = scoringplays + "No description currently available"
+					break
 		elif actions[len(actions)-1].get("score") == "T":	
-			scoringplays = scoringplays + actions[len(actions)-1].get("des")
+			while True:
+				try:
+					scoringplays = scoringplays + actions[len(actions)-1].get("des")
+					break
+				except:
+					scoringplays = scoringplays + "No description currently available"
+					break
 		else:		
 			scoringplays = scoringplays + s.get("pbp")	
+		
 		scoringplays = scoringplays + "|"	
 		if int(s.get("home")) < int(s.get("away")):
 			scoringplays = scoringplays + s.get("away") + "-" + s.get("home") + " " + "[](" + teamflair[1] + ")"
@@ -325,9 +341,9 @@ def generatedecisions(files):
 					awaypitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
 		elif type(players) is dict:
 			if pitching[i].get('team_flag') == "home":
-				homepitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
+				homepitchers.append(player.pitcher(players.get('name'), players.get('note'), players.get('id')))
 			else:
-				awaypitchers.append(player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
+				awaypitchers.append(player.pitcher(players.get('name'), players.get('note'), players.get('id')))
 	decisions = decisions + "|Decisions|" + "\n"	
 	decisions = decisions + "|:--:|" + "\n"	
 	decisions = decisions + "|" + "[](" + teamflair[1] + ")" 
@@ -353,7 +369,7 @@ def getsubreddits(homename, awayname):
 		"Angels" : "/r/AngelsBaseball",
 		"Mariners" : "/r/Mariners",
 		"Red Sox" : "/r/RedSox",
-		"Yankees" : "/r/NYYankees",
+		"Yankees" : "/r/Yankees",
 		"Blue Jays" : "/r/TorontoBlueJays",
 		"Rays" : "/r/TampaBayRays",
 		"Orioles" : "/r/Orioles",
@@ -364,6 +380,7 @@ def getsubreddits(homename, awayname):
 		"Brewers" : "/r/Brewers",
 		"Giants" : "/r/SFGiants",
 		"Diamondbacks" : "/r/azdiamondbacks",
+		"D-backs" : "/r/azdiamondbacks",		
 		"Rockies" : "/r/ColoradoRockies",
 		"Dodgers" : "/r/Dodgers",
 		"Padres" : "/r/Padres",
@@ -402,6 +419,7 @@ def getteamflair(homename, awayname):
 		"Brewers" : "/MIL",
 		"Giants" : "/SFG1",
 		"Diamondbacks" : "/ARI2",
+		"D-backs" : "/ARI2",			
 		"Rockies" : "/COL",
 		"Dodgers" : "/LAD",
 		"Padres" : "/SD1",
@@ -413,7 +431,7 @@ def getteamflair(homename, awayname):
 	}
 	teamflair.append(options[homename])
 	teamflair.append(options[awayname])
-	return teamflair
+	return teamflair	
 	
 def getnotes(homename, awayname):
 	notes = []
@@ -440,6 +458,7 @@ def getnotes(homename, awayname):
 		"Brewers" : "mil",
 		"Giants" : "sf",
 		"Diamondbacks" : "ari",
+		"D-backs" : "ari",			
 		"Rockies" : "col",
 		"Dodgers" : "la",
 		"Padres" : "sd",
@@ -452,3 +471,4 @@ def getnotes(homename, awayname):
 	notes.append(options[homename])
 	notes.append(options[awayname])
 	return notes	
+
