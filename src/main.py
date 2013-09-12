@@ -1,4 +1,4 @@
-import player, editor
+import player, editor, posteditor
 from datetime import datetime
 import timecheck
 import time
@@ -8,7 +8,7 @@ import urllib2
 import simplejson as json
 	
 r = praw.Reddit(user_agent='Game Discission Thread Generator Bot by /u/DetectiveWoofles') 
-r.login('****', '****')
+r.login('xxx', 'xxx')
 
 while True:
 	
@@ -18,7 +18,7 @@ while True:
 	url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
 	
 	# UNCOMMENT FOR TESTING PURPOSES ONLY
-	# url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_11/"
+	#url = url + "year_2013" + "/month_08" + "/day_12/"
 
 	response = ""
 	while not response:
@@ -42,7 +42,10 @@ while True:
 		if not timecheck.ppcheck(d):
 			while True:
 				try:
+					print "Submitting game thread..."
 					sub = r.submit('SUBREDDITNAME', title, editor.generatecode(d))
+					#sub = r.get_submission(submission_id='xxxxxx')
+					print "Game thread submitted..."
 					break
 				except Exception, err:
 					print err
@@ -57,7 +60,11 @@ while True:
 						print "Couldn't submit edits, trying again..."
 						time.sleep(10)
 				if "|Decisions|" in str:
-					break
+					print "Submitting postgame thread..."				
+					posttitle = posteditor.generatetitle(d)
+					sub = r.submit('SUBREDDITNAME', posttitle, posteditor.generatecode(d))
+					print "Postgame thread submitted..."					
+					break						
 				elif "###POSTPONED" in str:
 					break
 				time.sleep(10)
