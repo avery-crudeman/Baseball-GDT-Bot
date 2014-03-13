@@ -1,1 +1,5 @@
-Note: code now also requires Beautiful Soup 4 module.
+praw - interfacing reddit
+simplejson - JSON parsing
+urllib2 - pulling data from MLB servers
+ElementTree - XML parsing
+Beautiful Soup 4 - HTML scraping
