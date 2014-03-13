@@ -1,3 +1,7 @@
+Runs on Python 2.7
+
+Modules:
+
 praw - interfacing reddit
 simplejson - JSON parsing
 urllib2 - pulling data from MLB servers
