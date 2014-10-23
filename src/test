@@ -1,0 +1,29 @@
+import player, editor
+from datetime import datetime
+import time
+
+import praw
+import urllib2
+import simplejson as json
+
+r = praw.Reddit(user_agent='Game Discission Thread Generator Bot by /u/DetectiveWoofles') 
+r.login('USERNAME', 'PASSWORD')	
+
+# getting dirc
+d = datetime.today()
+url = "http://gd2.mlb.com/components/game/mlb/"
+#url = url + "year_" + d.strftime("%Y") + "/month_" + d.strftime("%m") + "/day_" + d.strftime("%d") + "/"
+url = url + "year_2014/month_10/day_02/"
+
+reponse = urllib2.urlopen(url)
+html = reponse.readlines()
+directories = []
+# print html
+for v in html:
+	if "kcamlb" in v:
+		v = v[v.index("\"")+1:len(v)]
+		v = v[0:v.index("\"")]
+		directories.append(url + v)
+title = editor.generatetitle(directories[0]);
+sub = r.submit('SUBREDDIT', title, editor.generatecode(directories[0]))
+#sub = r.get_submission(submission_id='SHORTLINK')
