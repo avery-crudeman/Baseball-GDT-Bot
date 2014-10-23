@@ -4,5 +4,4 @@ Modules:
 
 praw - interfacing reddit
 simplejson - JSON parsing
-ElementTree - XML parsing
 Beautiful Soup 4 - HTML scraping
