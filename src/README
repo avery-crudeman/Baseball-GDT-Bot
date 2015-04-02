@@ -1,7 +1,5 @@
-Runs on Python 2.7
+Python 2.7
 
 Modules:
-
 praw - interfacing reddit
 simplejson - JSON parsing
-Beautiful Soup 4 - HTML scraping
