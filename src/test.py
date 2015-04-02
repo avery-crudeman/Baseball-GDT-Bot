@@ -18,7 +18,8 @@ html = reponse.readlines()
 directories = []
 # print html
 for v in html:
-    if "balmlb" in v:
+    #ENTER TEAM CODE HERE
+    if "XXX" in v:
         v = v[v.index("\"") + 1:len(v)]
         v = v[0:v.index("\"")]
         directories.append(url + v)
