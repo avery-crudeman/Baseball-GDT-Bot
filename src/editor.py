@@ -188,15 +188,15 @@ def generateheader(files):
             header = header + "[](/hellobaseballbot)\n\n"
             return header
             break
-
+        
 
 def generateboxscore(files):
     boxscore = ""
     while True:
         try:
-            homebatters = [];
+            homebatters = []
             awaybatters = []
-            homepitchers = [];
+            homepitchers = []
             awaypitchers = []
             game = files["boxscore"].get('data').get('boxscore')
             team = files["linescore"].get('data').get('game')
@@ -227,26 +227,24 @@ def generateboxscore(files):
                                 player.pitcher(players[p].get('name'), players[p].get('out'), players[p].get('h'),
                                                players[p].get('r'), players[p].get('er'), players[p].get('bb'),
                                                players[p].get('so'), players[p].get('np'), players[p].get('s'),
-                                               players[p].get('era'), players[p].get('note'), players[p].get('id')))
+                                               players[p].get('era'), players[p].get('id')))
                         else:
                             awaypitchers.append(
                                 player.pitcher(players[p].get('name'), players[p].get('out'), players[p].get('h'),
                                                players[p].get('r'), players[p].get('er'), players[p].get('bb'),
                                                players[p].get('so'), players[p].get('np'), players[p].get('s'),
-                                               players[p].get('era'), players[p].get('note'), players[p].get('id')))
+                                               players[p].get('era'), players[p].get('id')))
                 elif type(players) is dict:
                     if pitching[i].get('team_flag') == "home":
                         homepitchers.append(
                             player.pitcher(players.get('name'), players.get('out'), players.get('h'), players.get('r'),
                                            players.get('er'), players.get('bb'), players.get('so'), players.get('np'),
-                                           players.get('s'), players.get('era'), players.get('note'),
-                                           players.get('id')))
+                                           players.get('s'), players.get('era'), players.get('id')))
                     else:
                         awaypitchers.append(
                             player.pitcher(players.get('name'), players.get('out'), players.get('h'), players.get('r'),
                                            players.get('er'), players.get('bb'), players.get('so'), players.get('np'),
-                                           players.get('s'), players.get('era'), players.get('note'),
-                                           players.get('id')))
+                                           players.get('s'), players.get('era'), players.get('id')))
             while len(homebatters) < len(awaybatters):
                 homebatters.append(player.batter())
             while len(awaybatters) < len(homebatters):
@@ -280,7 +278,7 @@ def generateboxscore(files):
             print "Missing data for boxscore, returning blank text..."
             return boxscore
             break
-
+        
 
 def generatelinescore(files):
     linescore = ""
