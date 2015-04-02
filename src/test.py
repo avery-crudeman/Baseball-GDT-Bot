@@ -4,8 +4,7 @@ from datetime import datetime
 import praw
 import urllib2
 
-r = praw.Reddit(user_agent='Game Discission Thread Generator Bot by /u/DetectiveWoofles')
-#r.login('username', 'password')
+r = praw.Reddit(user_agent='GDTBot')
 r.login('XXX', 'XXX')
 
 # getting dirc
@@ -24,6 +23,5 @@ for v in html:
         v = v[0:v.index("\"")]
         directories.append(url + v)
 title = editor.generatetitle(directories[0]);
-#sub = r.submit('orioles', title, editor.generatecode(directories[0]))
-sub = r.submit('crudeman', title, editor.generatecode(directories[0]))
-#sub = r.get_submission(submission_id='2fasuv')
+sub = r.submit('XXX', title, editor.generatecode(directories[0]))
+#sub = r.get_submission(submission_id='XXX')
