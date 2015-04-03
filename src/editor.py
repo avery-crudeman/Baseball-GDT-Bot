@@ -188,7 +188,7 @@ def generateheader(files):
             header = header + "[](/hellobaseballbot)\n\n"
             return header
             break
-        
+
 
 def generateboxscore(files):
     boxscore = ""
@@ -278,7 +278,7 @@ def generateboxscore(files):
             print "Missing data for boxscore, returning blank text..."
             return boxscore
             break
-        
+
 
 def generatelinescore(files):
     linescore = ""
