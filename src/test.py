@@ -5,7 +5,7 @@ import praw
 import urllib2
 
 r = praw.Reddit(user_agent='GDTBot')
-r.login('XXX', 'XXX')
+r.login('ZZZ', 'XXX')
 
 # getting dirc
 d = datetime.today()
