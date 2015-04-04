@@ -485,6 +485,11 @@ def generatestatus(files):
                 print "Returning status..."
                 return status
                 break
+            elif game.get('status') == "Cancelled":
+                status = status + "##CANCELLED\n\n"
+                print "Returning status..."
+                return status
+                break            
             else:
                 print "Status not final or postponed, returning blank text..."
                 return status
