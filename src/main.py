@@ -110,6 +110,16 @@ while True:
                     sub = r.submit('XXX', posttitle, editor.generatecode(d))
                     print "Postgame thread submitted..."
                     break
+                elif "##CANCELLED" in str:
+                    check = datetime.today()
+                    print datetime.strftime(check, "%d %I:%M %p")
+                    print "Game cancelled..."
+                    print "Submitting postgame thread..."
+                    posttitle = editor.generateposttitle(d)
+                    #ENTER SUBREDDIT NAME HERE
+                    sub = r.submit('XXX', posttitle, editor.generatecode(d))
+                    print "Postgame thread submitted..."
+                    break                
                 time.sleep(10)
     if datetime.today().day == today.day:
         timecheck.endofdaycheck()
