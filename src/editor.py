@@ -491,7 +491,7 @@ def generatestatus(files):
                 return status
                 break            
             else:
-                print "Status not final or postponed, returning blank text..."
+                print "Status not final, returning blank text..."
                 return status
                 break
         except:
