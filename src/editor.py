@@ -51,30 +51,11 @@ class Editor:
         game = filething.get('data').get('game')
         timestring = game.get('time_date') + " " + game.get('ampm')
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-        if "NY" in game.get('away_team_city'):
-            title = title + "New York " + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get(
-                'away_loss') + ")"
-            title = title + " @ "
-            title = title + game.get('home_team_city') + " " + game.get('home_team_name') + " (" + game.get(
-                'home_win') + "-" + game.get('home_loss') + ")"
-            title = title + " - "
-            title = title + date_object.strftime("%B %d, %Y")
-        elif "NY" in game.get('home_team_city'):
-            title = title + game.get('away_team_city') + " " + game.get('away_team_name') + " (" + game.get(
-                'away_win') + "-" + game.get('away_loss') + ")"
-            title = title + " @ "
-            title = title + "New York " + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get(
-                'home_loss') + ")"
-            title = title + " - "
-            title = title + date_object.strftime("%B %d, %Y")
-        else:
-            title = title + game.get('away_team_city') + " " + game.get('away_team_name') + " (" + game.get(
-                'away_win') + "-" + game.get('away_loss') + ")"
-            title = title + " @ "
-            title = title + game.get('home_team_city') + " " + game.get('home_team_name') + " (" + game.get(
-                'home_win') + "-" + game.get('home_loss') + ")"
-            title = title + " - "
-            title = title + date_object.strftime("%B %d, %Y")
+        title = title + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
+        title = title + " @ "
+        title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
+        title = title + " - "
+        title = title + date_object.strftime("%B %d, %Y")
         print "Returning title..."
         return title
 
