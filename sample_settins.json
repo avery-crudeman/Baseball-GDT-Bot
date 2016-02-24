@@ -8,39 +8,39 @@
     "POST_TIME": 1,
     "SUBREDDIT": "XXX",
     "TEAM_CODE": "XXX",
-    "PREGAME_THREAD": false,
-    "POST_GAME_THREAD": false,
-    "STICKY": true,
+    "PREGAME_THREAD": 0,
+    "POST_GAME_THREAD": 1,
+    "STICKY": 1,
     "SUGGESTED_SORT": "new",
-    "MESSAGE": false,
+    "MESSAGE": 0,
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
         "CONTENT": {
-            "PROBABLES": true,
-            "FIRST_PITCH": true
+            "PROBABLES": 1,
+            "FIRST_PITCH": 1
         }
     },
     "THREAD_SETTINGS": {
         "THREAD_TAG": "GAME THREAD:",
         "CONTENT": {
-            "HEADER": true,
-            "BOX_SCORE": true,
-            "LINE_SCORE": true,
-            "SCORING_PLAYS": true,
-            "HIGHLIGHTS": true,
-            "FOOTER": false
+            "HEADER": 1,
+            "BOX_SCORE": 1,
+            "LINE_SCORE": 1,
+            "SCORING_PLAYS": 1,
+            "HIGHLIGHTS": 1,
+            "FOOTER": 0
         }
     },
     "POST_THREAD_SETTINGS": {
         "POST_THREAD_TAG": "POST GAME THREAD:",
         "CONTENT": {
-            "HEADER": true,
-            "BOX_SCORE": true,
-            "LINE_SCORE": true,
-            "SCORING_PLAYS": true,
-            "HIGHLIGHTS": true,
-            "FOOTER": false
+            "HEADER": 1,
+            "BOX_SCORE": 1,
+            "LINE_SCORE": 1,
+            "SCORING_PLAYS": 1,
+            "HIGHLIGHTS": 1,
+            "FOOTER": 0
         }
     }
 }
