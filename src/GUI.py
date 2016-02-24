@@ -7,7 +7,7 @@ from subprocess import Popen, CREATE_NEW_CONSOLE
 def GUI():
 
     root = Tk()
-    root.title("Baseball GDT Bot 3.0.1")
+    root.title("Baseball GDT Bot 3.0.2")
     root.geometry('605x605')
     def quit():
         root.quit()
