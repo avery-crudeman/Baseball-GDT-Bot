@@ -29,7 +29,7 @@ Finally, Copy sample_settings.json to the src folder and rename it to settings.j
 
 ####SET UP THE REST OF THE BOT!
 
-Edit settings.json with the following information:
+Edit settings.json with the following information or use the GUI:
 
 BOT_TIME_ZONE - time zone of the computer running the bot, uncomment the line that you want to use
 TIME_ZONE - time zone of the team. uncomment the line that you want to use
@@ -56,6 +56,9 @@ Modules being used:
 	ElementTree - XML parsing
 
 ###Updates
+
+####v3.0.2
+* GUI interface!
 
 ####v3.0.1
 * Now uses OAuth!
