@@ -39,12 +39,14 @@ class TimeCheck:
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         while True:
             check = datetime.today()
-            if (date_object - check).seconds <= self.time_before:
-                return
+            if date_object >= check:
+                if (date_object - check).seconds <= self.time_before:
+                    return
+                else:
+                    print "Last game check: " + datetime.strftime(check, "%d %I:%M %p")
+                    time.sleep(600)
             else:
-                print "Last game check: " + datetime.strftime(check, "%d %I:%M %p")
-                time.sleep(600)
-
+                return
 
     def ppcheck(self,dir):
         try:
@@ -57,3 +59,13 @@ class TimeCheck:
         jsonfile = json.load(response)
         game = jsonfile.get('data').get('game')
         return (game.get('status') == "Postponed")
+
+    def pregamecheck(self,pre_time):
+        date_object = datetime.strptime(pre_time, "%I%p")
+        while True:
+            check = datetime.today()
+            if date_object.hour <= check.hour:
+                return
+            else:
+                print "Last pre-game check: " + datetime.strftime(check, "%d %I:%M %p")
+                time.sleep(600)
