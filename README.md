@@ -47,13 +47,6 @@ If something doesn't seem right, feel free to message me or post it as a bug her
 This was written in Python 2.7, so beware if you are running Python 3 or
 	above that it may not work correctly. Also make sure you install
 	praw and simplejson before running!
-	
-Modules being used:
-
-	praw - interfacing reddit
-	simplejson - JSON parsing
-	urllib2 - pulling data from MLB servers
-	ElementTree - XML parsing
 
 ###Updates
 
