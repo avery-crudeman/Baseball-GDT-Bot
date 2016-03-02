@@ -267,14 +267,10 @@ def GUI():
         l.pack(side=LEFT, anchor=W)	
         
         f.pack(fill=X,padx=10)		
-
-        #GUIcontrols
-        group = LabelFrame(root, text="Controls", padx=5, pady=5)
-        group.place(x=305,y=380,height=170,width=300)
         
         #GameThreadSettings
         group = LabelFrame(root, text="Game Thread Settings", padx=5, pady=5)
-        group.place(x=305,y=200,height=300,width=300) 
+        group.place(x=305,y=200,height=225,width=300) 
 
         l = Label(group, text="Game Thread Tag")
         l.pack(anchor=W)
@@ -449,7 +445,7 @@ def GUI():
 
         #Postgame settings
         group = LabelFrame(root, text="Postgame Thread Settings", padx=5, pady=5)
-        group.place(x=305,y=400,height=200,width=300)
+        group.place(x=305,y=425,height=175,width=300)
             
         PostgameThreadVar = IntVar()
         PostgameThread = Checkbutton(group, text="Toggle Postgame Thread", variable=PostgameThreadVar)
