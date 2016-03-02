@@ -22,6 +22,7 @@ def GUI():
             BOT_TIME_ZONE = settings.get('BOT_TIME_ZONE')
             TEAM_TIME_ZONE = settings.get('TEAM_TIME_ZONE')
             POST_TIME = settings.get('POST_TIME')
+            PRE_POST_TIME = settings.get('PRE_POST_TIME')
             SUBREDDIT = settings.get('SUBREDDIT')
             TEAM_CODE = settings.get('TEAM_CODE')
             PREGAME_THREAD = settings.get('PREGAME_THREAD')
@@ -64,6 +65,7 @@ def GUI():
                 "BOT_TIME_ZONE": BotTimeZoneVar.get(),
                 "TEAM_TIME_ZONE": TeamTimeZoneVar.get(),
                 "POST_TIME": int(PostTimeVar.get()),
+                "PRE_POST_TIME": PreThreadTimeVar.get(),
                 "SUBREDDIT": Subreddit.get(),
                 "TEAM_CODE": TeamCodeVar.get(),
                 "PREGAME_THREAD": PregameThreadVar.get(),
@@ -432,7 +434,7 @@ def GUI():
         ]
         PreThreadTimeVar = StringVar(f)
         if PRE_THREAD_TIME != "":
-            PreThreadTimeVar.set(POST_TIME)
+            PreThreadTimeVar.set(PRE_POST_TIME)
         else:
             PreThreadTimeVar.set(PreThreadTime[0])
         PreThreadTime = apply(OptionMenu, (f, PreThreadTimeVar) + tuple(PreThreadTime))
