@@ -255,7 +255,7 @@ def GUI():
         f = Frame(group)	
         
         TeamCode = [
-            "ANA","ARI","ATL","BAL","BOS","CHA","CHN","CIN","CLE","COL","DET","HOU","KCA","LAN","MIA","MIN","MIL","NYA","NYN","OAK","PHI","PIT","SDN","SEA","SFN","SLN","TEX","TBA","TOR","WAS"
+            "ana","ari","atl","bal","bos","cha","chn","cin","cle","col","det","hou","kca","lan","mia","min","mil","nya","nyn","oak","phi","pit","sdn","sea","sfn","sln","tex","tba","tor","was"
         ]
         TeamCodeVar = StringVar(f)
         if TEAM_CODE != "":
